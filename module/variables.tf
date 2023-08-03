@@ -31,14 +31,14 @@ variable "friendly_name" {
 variable "description" {
   type        = string
   description = "A description for the Virtual Desktop Host Pool."
-  default = ""
+  default     = ""
   ### TO-DO add Validation Block
 }
 
 variable "host_pools" {
   type = list(object({
-    hostpool_id = string
-    scaling_plan_enabled = optional(bool,true)
+    hostpool_id          = string
+    scaling_plan_enabled = optional(bool, true)
   }))
   description = <<DESC
     hostpool_id - The ID of the HostPool to assign the Scaling Plan to.
@@ -57,8 +57,8 @@ variable "time_zone" {
 
 variable "exclusion_tag" {
   description = "The name of the tag associated with the VMs you want to exclude from autoscaling."
-  type = string
-  default = null
+  type        = string
+  default     = null
 }
 
 variable "schedules" {
@@ -82,7 +82,7 @@ variable "schedules" {
   #ramp_up_capacity_threshold_percent - This is the value of percentage of used host pool capacity that will be considered to evaluate whether to turn on/off virtual machines during the ramp-up and peak hours. For example, if capacity threshold is specified as 60% and your total host pool capacity is 100 sessions, autoscale will turn on additional session hosts once the host pool exceeds a load of 60 sessions.
   #ramp_up_minimum_hosts_percent - Specifies the minimum percentage of session host virtual machines to start during ramp-up for peak hours. For example, if Minimum percentage of hosts is specified as 10% and total number of session hosts in your host pool is 10, autoscale will ensure a minimum of 1 session host is available to take user connections.
   #DESC
-  type        = list(object({
+  type = list(object({
     name                                 = string
     days_of_week                         = list(string)
     ramp_up_start_time                   = string
