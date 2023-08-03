@@ -7,4 +7,3 @@ output "avd_scalingplan_name" {
   description = "Virtual Desktop Scaling Plan Name"
   value       = azurerm_virtual_desktop_scaling_plan.this.name
 }
-
