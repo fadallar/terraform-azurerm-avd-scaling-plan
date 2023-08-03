@@ -42,6 +42,7 @@ locals {
     }
   ]
   # AVD App Scale Plan
+  avd_role_definition_assignable_scope = module.resource_group.resource_group_id
   avd_scale_plan_friendly_name = "My friendly name"
   avd_scale_plan_description   = "My description"
   avd_scale_plan_schedules = [{
@@ -146,6 +147,7 @@ module "avdscaleplan" {
   diag_log_analytics_workspace_id = module.diag_log_analytics_workspace.log_analytics_workspace_id
 
   # Module Parameters
+  avd_role_definition_assignable_scope = local.avd_role_definition_assignable_scope
   friendly_name = local.avd_scale_plan_friendly_name
   description   = local.avd_scale_plan_description
   schedules     = local.avd_scale_plan_schedules
