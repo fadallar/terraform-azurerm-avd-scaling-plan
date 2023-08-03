@@ -37,4 +37,5 @@ resource "azurerm_virtual_desktop_scaling_plan" "this" {
     }
     
   }
+  depends_on [azurerm_role_assignment.this]
 }
