@@ -29,7 +29,7 @@ resource "azurerm_role_definition" "this" {
   ]
 }
 data "azuread_service_principal" "this" {
-  display_name = "Windows Virtual Desktop"
+  display_name = "Azure Virtual Desktop"
 }
 resource "azurerm_role_assignment" "this" {
   name                             = random_uuid.this.result
