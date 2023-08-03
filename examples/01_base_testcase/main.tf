@@ -42,9 +42,9 @@ locals {
     }
   ]
   # AVD App Scale Plan
-  avd_scale_plan_friendly_name                = "My friendly name"
-  avd_scale_plan_description                  = "My description"
-  avd_scale_plan_schedules = [ {
+  avd_scale_plan_friendly_name = "My friendly name"
+  avd_scale_plan_description   = "My description"
+  avd_scale_plan_schedules = [{
     name                                 = "Weekdays"
     days_of_week                         = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
     ramp_up_start_time                   = "05:00"
@@ -63,9 +63,9 @@ locals {
     ramp_down_stop_hosts_when            = "ZeroSessions"
     off_peak_start_time                  = "22:00"
     off_peak_load_balancing_algorithm    = "DepthFirst"
-  }
+    }
   ]
-  avd_scale_plan_host_pools = [ {
+  avd_scale_plan_host_pools = [{
     hostpool_id          = module.avdhostpool_desktop.avd_host_pool_id
     scaling_plan_enabled = true
   }]
@@ -148,6 +148,6 @@ module "avdscaleplan" {
   # Module Parameters
   friendly_name = local.avd_scale_plan_friendly_name
   description   = local.avd_scale_plan_description
-  schedules        = local.avd_scale_plan_schedules
+  schedules     = local.avd_scale_plan_schedules
   host_pools    = local.avd_scale_plan_host_pools
 }
