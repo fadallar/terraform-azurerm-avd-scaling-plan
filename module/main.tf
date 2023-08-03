@@ -6,6 +6,8 @@ resource "azurerm_virtual_desktop_scaling_plan" "this" {
   description         = var.description
   friendly_name       = var.friendly_name
   time_zone           = var.time_zone
+  tags = merge(var.default_tags, var.extra_tags)
+
   dynamic "schedule" {
     for_each = var.schedules != null ? var.schedules : []
     content {
