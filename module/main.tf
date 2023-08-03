@@ -29,11 +29,11 @@ resource "azurerm_virtual_desktop_scaling_plan" "this" {
     off_peak_load_balancing_algorithm    = schedule.value.off_peak_load_balancing_algorithm
     }
   }
-  dynamic "hostpool" {
+  dynamic "host_pool" {
     for_each = var.host_pools != null ? var.host_pools : []
     content {
-      hostpool_id          = hostpool.value.host_pool_id
-      scaling_plan_enabled = hostpool.value.scaling_enabled
+      hostpool_id          = host_pool.value.host_pool_id
+      scaling_plan_enabled = host_pool.value.scaling_enabled
     }
     
   }
