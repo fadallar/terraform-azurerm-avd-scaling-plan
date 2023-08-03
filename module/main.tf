@@ -10,7 +10,7 @@ resource "azurerm_virtual_desktop_scaling_plan" "this" {
     for_each = var.schedules != null ? var.schedules : []
     content {
     name                                 = schedule.value.name
-    days_of_week                         = schedule.value.day_of_week
+    days_of_week                         = schedule.value.days_of_week
     ramp_up_start_time                   = schedule.value.ramp_up_start_time
     ramp_up_load_balancing_algorithm     = schedule.value.ramp_up_load_balancing_algorithm
     ramp_up_minimum_hosts_percent        = schedule.value.ramp_up_minimum_hosts_percent
@@ -32,8 +32,8 @@ resource "azurerm_virtual_desktop_scaling_plan" "this" {
   dynamic "host_pool" {
     for_each = var.host_pools != null ? var.host_pools : []
     content {
-      hostpool_id          = host_pool.value.host_pool_id
-      scaling_plan_enabled = host_pool.value.scaling_enabled
+      hostpool_id          = host_pool.value.hostpool_id
+      scaling_plan_enabled = host_pool.value.scaling_plan_enabled
     }
     
   }
