@@ -1,6 +1,6 @@
-# AVD Workspace - Base test case
+# AVD Scaling Plan - Base test case
 
-This is an example for setting-up a an Azure Virtual Desktop Workspace with private endpoint configuration  
+This is an example for setting-up a an Azure Virtual Desktop Scaling Plan
 
 This test case:
 - Sets the different Azure Region representation (location, location_short, location_cli ...) --> module "regions"
@@ -8,8 +8,9 @@ This test case:
 - Creates the following module dependencies
     - Resource Group
     - Log Analytics workspace
-- Creates an Azure Virtual Desktop Workspace --> module "avdworkspace" which also
-    - Set the default diagnostics settings (All Logs and metric) whith a Log Analytics workspace as destination
+- Creates an Azure Virtual Desktop Hostpool
+- Creates a Role definition and assign it to the Azure Virtual Desktop service principal
+- Creates a AVD Scaling plan
 
 <!-- BEGIN_AUTOMATED_TF_DOCS_BLOCK -->
 
