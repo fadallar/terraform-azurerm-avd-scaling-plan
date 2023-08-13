@@ -23,8 +23,6 @@ locals {
 
   # AVD Host Pool
 
-  registration_expiration_date = "2023-08-05T23:40:52Z"
-
   avd_host_friendly_name                   = "my friendly name"
   avd_host_description                     = "my description"
   avd_host_private_endpoint                = false
@@ -42,7 +40,7 @@ locals {
     }
   ]
   # AVD App Scale Plan
-  avd_role_definition_assignable_scope = module.resource_group.resource_group_id
+  avd_role_definition_assignable_scope = module.resource_group.resource_group_id // Please adapt the scope accordingly
   avd_scale_plan_friendly_name = "My friendly name"
   avd_scale_plan_description   = "My description"
   avd_scale_plan_schedules = [{
@@ -73,12 +71,12 @@ locals {
 }
 
 module "regions" {
-  source       = "git::https://ECTL-AZURE@dev.azure.com/ECTL-AZURE/ECTL-Terraform-Modules/_git/terraform-azurerm-regions//module?ref=master"
+  source       = "git::ssh://git@ssh.dev.azure.com/v3/ECTL-AZURE/ECTL-Terraform-Modules/terraform-azurerm-regions//module?ref=master"
   azure_region = local.location
 }
 
 module "base_tagging" {
-  source          = "git::https://ECTL-AZURE@dev.azure.com/ECTL-AZURE/ECTL-Terraform-Modules/_git/terraform-azurerm-basetagging//module?ref=master"
+  source          = "git::ssh://git@ssh.dev.azure.com/v3/ECTL-AZURE/ECTL-Terraform-Modules/terraform-azurerm-basetagging//module?ref=master"
   environment     = local.environment
   application     = local.application
   cost_center     = local.cost_center
@@ -91,7 +89,7 @@ module "base_tagging" {
 }
 
 module "resource_group" {
-  source            = "git::https://ECTL-AZURE@dev.azure.com/ECTL-AZURE/ECTL-Terraform-Modules/_git/terraform-azurerm-resourcegroup//module?ref=master"
+  source            = "git::ssh://git@ssh.dev.azure.com/v3/ECTL-AZURE/ECTL-Terraform-Modules/terraform-azurerm-resourcegroup//module?ref=master"
   stack             = local.stack
   landing_zone_slug = local.landing_zone_slug
   default_tags      = module.base_tagging.base_tags
@@ -100,7 +98,7 @@ module "resource_group" {
 }
 
 module "diag_log_analytics_workspace" {
-  source = "git::https://ECTL-AZURE@dev.azure.com/ECTL-AZURE/ECTL-Terraform-Modules/_git/terraform-azurerm-loganalyticsworkspace//module?ref=feature/use-tf-lock-file"
+  source = "git::ssh://git@ssh.dev.azure.com/v3/ECTL-AZURE/ECTL-Terraform-Modules/terraform-azurerm-loganalyticsworkspace//module?ref=master"
 
   landing_zone_slug   = local.landing_zone_slug
   stack               = local.stack
@@ -111,8 +109,9 @@ module "diag_log_analytics_workspace" {
 
 }
 
+# TO-DO  change avdhostpool source to main branch when mergerd
 module "avdhostpool_desktop" {
-  source                          = "../../../terraform-azurerm-avd-host-pool/module"
+  source                          = "git::ssh://git@ssh.dev.azure.com/v3/ECTL-AZURE/ECTL-Terraform-Modules/terraform-azurerm-avdhostpool//module?ref=develop"
   landing_zone_slug               = local.landing_zone_slug
   stack                           = local.stack
   location                        = module.regions.location
@@ -127,7 +126,6 @@ module "avdhostpool_desktop" {
 
   friendly_name                    = local.avd_host_friendly_name
   description                      = local.avd_host_description
-  registration_expiration_date     = local.registration_expiration_date
   enable_private_endpoint          = local.avd_host_private_endpoint
   custom_rdp_properties            = local.avd_host_custom_rdp_properties
   scheduled_agent_updates_enabled  = local.avd_host_scheduled_agent_updates_enabled
@@ -135,6 +133,7 @@ module "avdhostpool_desktop" {
   preferred_app_group_type         = "Desktop"
 }
 
+# Please replace the source with git::ssh://git@ssh.dev.azure.com/v3/ECTL-AZURE/ECTL-Terraform-Modules/terraform-azurerm-avdscaleplan//module?ref=<Master or Tag reference>
 module "avdscaleplan" {
   source                          = "../../module"
   landing_zone_slug               = local.landing_zone_slug
@@ -147,9 +146,11 @@ module "avdscaleplan" {
   diag_log_analytics_workspace_id = module.diag_log_analytics_workspace.log_analytics_workspace_id
 
   # Module Parameters
-  avd_role_definition_assignable_scope = local.avd_role_definition_assignable_scope
   friendly_name = local.avd_scale_plan_friendly_name
   description   = local.avd_scale_plan_description
   schedules     = local.avd_scale_plan_schedules
   host_pools    = local.avd_scale_plan_host_pools
+
+  depends_on = [azurerm_role_assignment.this] // !!! ONLY applicable if AVD does not already have the required privileges
+
 }

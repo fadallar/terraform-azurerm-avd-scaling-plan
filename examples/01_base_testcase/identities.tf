@@ -1,9 +1,13 @@
+## This code ensures that the Azure Virtual Desktop service 
+## principal has sufficient privilege to perform Host Pool Autoscaling
+## It is not required if the service has already these privilege for the resource scope
+
 resource "random_uuid" "this" {
 }
 
 resource "azurerm_role_definition" "this" {
-  name        = "AVD-AutoScale" ### TO DO Change name
-  scope       = var.avd_role_definition_assignable_scope
+  name        = "AVD-AutoScale"
+  scope       = local.avd_role_definition_assignable_scope
   description = "AVD AutoScale Role"
   permissions {
     actions = [
@@ -25,15 +29,17 @@ resource "azurerm_role_definition" "this" {
     not_actions = []
   }
   assignable_scopes = [
-    var.avd_role_definition_assignable_scope,
+    local.avd_role_definition_assignable_scope,
   ]
 }
+
 data "azuread_service_principal" "this" {
   display_name = "Azure Virtual Desktop"
 }
+
 resource "azurerm_role_assignment" "this" {
   name                             = random_uuid.this.result
-  scope                            = var.avd_role_definition_assignable_scope
+  scope                            = local.avd_role_definition_assignable_scope
   role_definition_id               = azurerm_role_definition.this.role_definition_resource_id
   principal_id                     = data.azuread_service_principal.this.id
   skip_service_principal_aad_check = true
